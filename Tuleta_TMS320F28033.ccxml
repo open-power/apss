@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configurations XML_version="1.2" id="configurations_0">
+    <configuration XML_version="1.2" id="configuration_0">
+        <instance XML_version="1.2" desc="Texas Instruments XDS100v2 USB Emulator" href="connections/TIXDS100v2_Connection.xml" id="Texas Instruments XDS100v2 USB Emulator" xml="TIXDS100v2_Connection.xml" xmlpath="connections"/>
+        <connection XML_version="1.2" id="Texas Instruments XDS100v2 USB Emulator">
+            <instance XML_version="1.2" href="drivers/tixds100v2c28x.xml" id="drivers" xml="tixds100v2c28x.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2cla.xml" id="drivers" xml="tixds100v2cla.xml" xmlpath="drivers"/>
+            <platform XML_version="1.2" id="platform_0">
+                <instance XML_version="1.2" desc="TMS320F28033" href="devices/f28033.xml" id="TMS320F28033" xml="f28033.xml" xmlpath="devices"/>
+            <cpu HW_revision="1.0" XML_version="1.2" description="Bypass Cpu" deviceSim="false" id="bypass_0" isa="BYPASS06"/>
+                <cpu HW_revision="1.0" XML_version="1.2" description="Bypass Cpu" deviceSim="false" id="bypass_1" isa="BYPASS04"/>
+                <cpu HW_revision="1.0" XML_version="1.2" description="Bypass Cpu" deviceSim="false" id="bypass_2" isa="BYPASS04"/>
+            <device HW_revision="1" XML_version="1.2" description="" id="TMS320F28033" partnum="TMS320F28033">
+                    <cpu HW_revision="1.0" XML_version="1.2" desc="C28xx" description="CPU" id="C28xx_0" isa="TMS320C28XX"/>
+                </device>
+            </platform>
+        </connection>
+    </configuration>
+</configurations>

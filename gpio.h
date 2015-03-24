@@ -1,0 +1,58 @@
+/** Copyright (c) 2009-2011, Texas Instruments Incorporated
+Copyright (c) 2012-2014, International Business Machines Corp.
+All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met: 
+1) Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer: 2) Redistributions in binary 
+form must reproduce the above copyright notice, this list of conditions and the 
+following disclaimer in the documentation and/or other materials provided with the 
+distribution, and; 3) Neither the name of the Texas Instruments nor the names of its 
+contributors may be used to endorse or promote products derived from this software 
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS, 
+STATUTORY OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+#ifndef GPIO_H_
+#define GPIO_H_
+
+/****************************************************************************
+ * Includes
+ ****************************************************************************/
+#include "apss_defines.h"
+
+/****************************************************************************
+ * Defines
+ ****************************************************************************/
+typedef struct
+{
+  uint8_t temperatureEnable : 1;
+  uint8_t altitudeEnable    : 1;
+  uint8_t temperatureCount0 : 1;
+  uint8_t temperatureCount1 : 1;
+  uint8_t temperatureCount2 : 1;	
+} hwSettingPins_t;
+
+/****************************************************************************
+ * Globals
+ ****************************************************************************/
+extern hwSettingPins_t G_hwSetPin;
+
+/****************************************************************************
+ * Functions
+ ****************************************************************************/
+void gpioReadHwSettingPins(void);
+void gpioPortSetDirection(void);
+void gpioPortDoWrites(void);
+void gpioPortDoReads(void);
+void gpioResetLatch(void);
+
+#endif /*GPIO_H_*/
