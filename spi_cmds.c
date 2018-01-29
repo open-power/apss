@@ -20,10 +20,10 @@ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRU
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 
-#include "apss_defines.h"
+ #include "apss_defines.h"
 #include "spi_cmds.h"
 #include "gpio.h"
 #include "DSP2803x_Device.h"
@@ -369,6 +369,10 @@ uint16_t spiStreamCompositeMode(uint16_t i_command)
       // JRK - also checking that L_adcChan never exceeds 15 (maximum readings)
       L_gpioPort = 0;
       L_doGpio = 0;
+      // We always aassume a new mode change results in resetting the ADC channels for composite mode
+      // This is a simplification to avoid the user having to set the new_cfg_bits/adc_chan_reset parameter
+      L_adcChan = 0;
+      l_mode->adc_chan_reset = 0;
 
       if(l_mode->new_cfg_bits)
       {
@@ -421,10 +425,10 @@ uint16_t spiStreamCompositeMode(uint16_t i_command)
   }
   
   // ensure we never go outside of bounds - double check
-  if(L_adcChan > L_compositeModeLastConfig.adc_last_chan) 
-  {
-    L_adcChan = 0;
-  }
+//  if(L_adcChan > L_compositeModeLastConfig.adc_last_chan)
+//  {
+//    L_adcChan = 0;
+//  }
   return l_rsp.word;
 }
 
@@ -628,11 +632,12 @@ uint16_t spiResponse(spi_cmd_msg_t * i_cmd)
   {
     //l_rsp = (*G_streamModeFuncPtrs[G_apssMode])(G_apssModeConfig);
     l_rsp = (*G_streamModeFuncPtrs[G_apssMode])(i_cmd->word);
-  } else {
-      // reset spi for unrecognized command
-      SpiaRegs.SPICCR.bit.SPISWRESET=0; // Reset SPI
-      SpiaRegs.SPICCR.bit.SPISWRESET=1; // Enable SPI
   }
+//  else {
+//      // reset spi for unrecognized command
+//      SpiaRegs.SPICCR.bit.SPISWRESET=0; // Reset SPI
+//      SpiaRegs.SPICCR.bit.SPISWRESET=1; // Enable SPI
+//  }
 
   DEBUG("Response:  0x%04x\n",l_rsp);
 

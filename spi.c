@@ -20,7 +20,7 @@ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRU
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 /****************************************************************************
  * Includes
  ****************************************************************************/
@@ -38,8 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 spi_cmd_msg_t sdata;     // Send data buffer
 spi_cmd_msg_t rdata;     // Receive data buffer
-Uint16 outgoing;     // last data transfer word for spi
-uint8_t reset_flag = 1; // flag indicating spi reset completed
 
 /****************************************************************************
  * Forward Declarations
@@ -143,37 +141,6 @@ interrupt void spiTxFifoIsr(void)
 }
 
 /**
-* check if SPISTE de-asserted, if so then check global
-* spi-data register to what is in SPIDAT, if it is not equal
-* and SPIDAT also is not 00 then reset the SPI interface...
-* This is to help reduce risk of single bit errors
-* locking up the state machine between master/slave
-* since a spi reset should clear out the buffers and start
-* with a fresh frame.
-*
-* @param none
-*
-* @return none
-**/
-void spi_check_sync(void)
-{
-    // check if reset is not already done and check if SPISTE is high (deactive)
-    if (GpioDataRegs.GPADAT.bit.GPIO18 == 1 && reset_flag > 0 && SpiaRegs.SPIDAT != outgoing) {
-    	reset_flag--;
-    	// make sure we have had sufficient time to catch the receive interrupt, so we decrement the
-    	// reset_flag until it reaches the value '1'.
-        if (reset_flag == 1) {
-            // reset spi
-            SpiaRegs.SPICCR.bit.SPISWRESET=0; // Reset SPI
-            SpiaRegs.SPICCR.bit.SPISWRESET=1; // Enable SPI
-            // setup outgoing buffer to match the last request
-            SpiaRegs.SPITXBUF = outgoing;
-            reset_flag = 0;
-        }
-    }
-}
-
-/**
 * ISR for SPI 240x Mode Transmit & Receive
 *
 * FIFO is no longer used.  Standard 240x Mode is used.
@@ -190,14 +157,11 @@ interrupt void spiRxFifoIsr(void)
     spiCommand(&rdata);
     
     // Place response into TX Buffer
-    outgoing = spiResponse(&rdata);
-    SpiaRegs.SPITXBUF = outgoing;
+    ////////SpiaRegs.SPITXBUF = spiResponse(&rdata);
+    SpiaRegs.SPIDAT = spiResponse(&rdata);
     
     // Toggle Debug Pin indicating we are talking SPI 
     GpioDataRegs.GPBTOGGLE.bit.GPIO39 = 1;  
-
-    // reset flag indicating we have sent data
-    reset_flag = 4;
 
     PieCtrlRegs.PIEACK.all|=0x20;       // Issue PIE ack
 
